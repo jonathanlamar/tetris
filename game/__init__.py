@@ -1,7 +1,6 @@
 from copy import deepcopy
 import os
 
-from IPython import embed
 import numpy as np
 
 from config import *
@@ -52,6 +51,7 @@ class GameState:
 
     def eliminateRows(self) -> None:
         fullRows = (self.board == 1).all(axis=1)
+        self.score += fullRows.sum()
         self.board = np.concatenate(
             (np.zeros((fullRows.sum(), BOARD_SIZE[1])), self.board[~fullRows])
         )
