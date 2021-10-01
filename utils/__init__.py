@@ -27,11 +27,22 @@ class Tetramino:
 
     def move(self, direction: KeyPress) -> None:
         if direction == KeyPress.DOWN:
-            self.squares[:, 0] += 1
+            self.squares[:, 0] += 2
         elif direction == KeyPress.LEFT:
             self.squares[:, 1] -= 1
         elif direction == KeyPress.RIGHT:
             self.squares[:, 1] += 1
+        elif direction == KeyPress.NONE:
+            self.squares[:, 0] += 1
+        elif direction == KeyPress.UP:
+            self.rotate()
+
+    @property
+    def belowSquares(self) -> np.ndarray:
+        xs = np.unique(self.squares[:, 1])
+        ys = [self.squares[self.squares[:, 1] == x, 0].max() + 1 for x in xs]
+
+        return np.array(list(zip(ys, xs)))
 
 
 class Eye(Tetramino):

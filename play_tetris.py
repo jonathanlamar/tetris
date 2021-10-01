@@ -1,6 +1,9 @@
+from __future__ import annotations
 from time import sleep
+
+from game import GameState
 from pynput.keyboard import Key, Listener
-from game import GameState, KeyPress
+from utils import KeyPress
 
 
 def onPress(key: Key) -> None:

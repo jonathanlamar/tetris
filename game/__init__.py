@@ -1,8 +1,11 @@
+from copy import deepcopy
+import os
+
+from IPython import embed
+import numpy as np
+
 from config import *
 from utils import *
-import numpy as np
-import os
-from copy import deepcopy
 
 
 class GameState:
@@ -15,6 +18,7 @@ class GameState:
     def update(self, keyPress: KeyPress) -> None:
         if self.checkColision(self.activePiece):
             self.dead = True
+            return
 
         newPiece = deepcopy(self.activePiece)
         newPiece.move(keyPress)
@@ -30,20 +34,34 @@ class GameState:
             self.activePiece = newPiece
 
     def checkColision(self, newPiece: Tetramino) -> bool:
-        return False
+        return (
+            any(newPiece.squares[:, 0] >= BOARD_SIZE[0])
+            or any(newPiece.squares[:, 1] < 0)
+            or any(newPiece.squares[:, 1] >= BOARD_SIZE[1])
+            or any([self.board[tuple(row)] for row in newPiece.squares])
+        )
 
     def checkResting(self, newPiece: Tetramino) -> bool:
-        return False
+        return any(newPiece.squares[:, 0] == BOARD_SIZE[0] - 1) or any(
+            [self.board[tuple(row)] for row in newPiece.belowSquares]
+        )
 
     def depositPiece(self, newPiece: Tetramino) -> None:
-        return
+        for idx in newPiece.squares:
+            self.board[tuple(idx)] = 1
 
     def eliminateRows(self) -> None:
-        return
+        fullRows = (self.board == 1).all(axis=1)
+        self.board = np.concatenate(
+            (np.zeros((fullRows.sum(), BOARD_SIZE[1])), self.board[~fullRows])
+        )
 
     def draw(self) -> None:
         os.system("clear")
         num_rows, num_cols = BOARD_SIZE
+        board = deepcopy(self.board)
+        for idx in self.activePiece.squares:
+            board[tuple(idx)] = 1
 
         # This weird printing syntax is an old school way of placing text
         # at coordinates.  Unfortunately those coordinates are indexed from
@@ -55,7 +73,7 @@ class GameState:
             print("\033[{0};1H|".format(i))
             for j in range(2, num_cols + 2):
                 # Print X for piece.
-                if self.board[i - 2, j - 2] > 0:
+                if board[i - 2, j - 2] > 0:
                     print("\033[{0};{1}H{2}".format(i, j, "X"))
             # Print part of the right border
             print("\033[{0};{1}H|".format(i, num_cols + 2))
