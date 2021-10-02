@@ -1,1 +1,1 @@
-BOARD_SIZE = (15, 10)
+from .config import *
