@@ -17,13 +17,9 @@ class KeyPress(Enum):
 
 
 class Tetramino:
-    def __init__(self, squares: np.ndarray) -> None:
+    def __init__(self, squares: np.ndarray, pivotIndex: int) -> None:
         self.squares = squares
-
-    # FIXME: Still shifts squares around
-    def rotate(self) -> None:
-        shift = self.squares.min(axis=0)
-        self.squares = np.dot(self.squares - shift, ROTATE_MATRIX) + shift
+        self.pivotIndex = pivotIndex
 
     def move(self, direction: KeyPress) -> None:
         if direction == KeyPress.DOWN:
@@ -35,7 +31,11 @@ class Tetramino:
         elif direction == KeyPress.NONE:
             self.squares[:, 0] += 1
         elif direction == KeyPress.UP:
-            self.rotate()
+            self._rotate()
+
+    def _rotate(self) -> None:
+        shift = self.squares[self.pivotIndex]
+        self.squares = np.dot(self.squares - shift, ROTATE_MATRIX) + shift
 
     @property
     def belowSquares(self) -> np.ndarray:
@@ -48,53 +48,58 @@ class Tetramino:
 class Eye(Tetramino):
     def __init__(self) -> None:
         super().__init__(
-            np.array(
+            squares=np.array(
                 [(0, MIDDLE_COL), (1, MIDDLE_COL), (2, MIDDLE_COL), (3, MIDDLE_COL)]
-            )
+            ),
+            pivotIndex=1,
         )
 
 
 class Ell(Tetramino):
     def __init__(self) -> None:
         super().__init__(
-            np.array(
+            squares=np.array(
                 [(0, MIDDLE_COL), (1, MIDDLE_COL), (2, MIDDLE_COL), (2, MIDDLE_COL + 1)]
-            )
+            ),
+            pivotIndex=1,
         )
 
 
 class Square(Tetramino):
     def __init__(self) -> None:
         super().__init__(
-            np.array(
+            squares=np.array(
                 [
                     (0, MIDDLE_COL),
                     (0, MIDDLE_COL + 1),
                     (1, MIDDLE_COL),
                     (1, MIDDLE_COL + 1),
                 ]
-            )
+            ),
+            pivotIndex=0,
         )
 
 
 class Tee(Tetramino):
     def __init__(self) -> None:
         super().__init__(
-            np.array(
+            squares=np.array(
                 [(0, MIDDLE_COL), (1, MIDDLE_COL), (1, MIDDLE_COL + 1), (2, MIDDLE_COL)]
-            )
+            ),
+            pivotIndex=1,
         )
 
 
 class Zee(Tetramino):
     def __init__(self) -> None:
         super().__init__(
-            np.array(
+            squares=np.array(
                 [
                     (0, MIDDLE_COL),
                     (1, MIDDLE_COL),
                     (1, MIDDLE_COL + 1),
                     (2, MIDDLE_COL + 1),
                 ]
-            )
+            ),
+            pivotIndex=1,
         )
