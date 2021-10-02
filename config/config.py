@@ -1,1 +1,1 @@
-BOARD_SIZE = (15, 10)
+BOARD_SIZE = (20, 15)

@@ -12,27 +12,29 @@ class GameState:
         self.board = np.zeros(BOARD_SIZE)
         self.score = 0
         self.activePiece = GameState.getRandomPiece()
+        self.nextPiece = GameState.getRandomPiece()
         self.dead = False
 
     def update(self, keyPress: KeyPress) -> None:
-        if self.checkColision(self.activePiece):
+        if self._checkCollision(self.activePiece):
             self.dead = True
             return
 
         newPiece = deepcopy(self.activePiece)
         newPiece.move(keyPress)
 
-        if self.checkColision(newPiece):
+        if self._checkCollision(newPiece):
             newPiece = self.activePiece
 
-        if self.checkResting(newPiece):
-            self.depositPiece(newPiece)
-            self.eliminateRows()
-            self.activePiece = GameState.getRandomPiece()
+        if self._checkResting(newPiece):
+            self._depositPiece(newPiece)
+            self._eliminateRows()
+            self.activePiece = self.nextPiece
+            self.nextPiece = GameState.getRandomPiece()
         else:
             self.activePiece = newPiece
 
-    def checkColision(self, newPiece: Tetramino) -> bool:
+    def _checkCollision(self, newPiece: Tetramino) -> bool:
         return (
             any(newPiece.squares[:, 0] >= BOARD_SIZE[0])
             or any(newPiece.squares[:, 1] < 0)
@@ -40,16 +42,16 @@ class GameState:
             or any([self.board[tuple(row)] for row in newPiece.squares])
         )
 
-    def checkResting(self, newPiece: Tetramino) -> bool:
+    def _checkResting(self, newPiece: Tetramino) -> bool:
         return any(newPiece.squares[:, 0] == BOARD_SIZE[0] - 1) or any(
             [self.board[tuple(row)] for row in newPiece.belowSquares]
         )
 
-    def depositPiece(self, newPiece: Tetramino) -> None:
+    def _depositPiece(self, newPiece: Tetramino) -> None:
         for idx in newPiece.squares:
             self.board[tuple(idx)] = 1
 
-    def eliminateRows(self) -> None:
+    def _eliminateRows(self) -> None:
         fullRows = (self.board == 1).all(axis=1)
         self.score += fullRows.sum()
         self.board = np.concatenate(
@@ -80,8 +82,12 @@ class GameState:
         # Print bottom border
         print("\033[{0};0H+".format(num_rows + 2) + "-" * num_cols + "+")
         # Print other self info
-        print("\033[{0};1HScore: {1}".format(num_rows + 3, self.score))
+        print(
+            "\033[{0};1HScore: {1} Next piece: {2}".format(
+                num_rows + 3, self.score, self.nextPiece.letter
+            )
+        )
 
     @staticmethod
     def getRandomPiece() -> Tetramino:
-        return np.random.choice([Eye(), Ell(), Square(), Zee(), Tee()])
+        return np.random.choice([Eye(), Ell(), Ohh(), Zee(), Tee()])

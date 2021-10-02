@@ -17,9 +17,10 @@ class KeyPress(Enum):
 
 
 class Tetramino:
-    def __init__(self, squares: np.ndarray, pivotIndex: int) -> None:
+    def __init__(self, squares: np.ndarray, pivotIndex: int, letter: str) -> None:
         self.squares = squares
         self.pivotIndex = pivotIndex
+        self.letter = letter
 
     def move(self, direction: KeyPress) -> None:
         if direction == KeyPress.DOWN:
@@ -52,6 +53,7 @@ class Eye(Tetramino):
                 [(0, MIDDLE_COL), (1, MIDDLE_COL), (2, MIDDLE_COL), (3, MIDDLE_COL)]
             ),
             pivotIndex=1,
+            letter="I",
         )
 
 
@@ -62,10 +64,11 @@ class Ell(Tetramino):
                 [(0, MIDDLE_COL), (1, MIDDLE_COL), (2, MIDDLE_COL), (2, MIDDLE_COL + 1)]
             ),
             pivotIndex=1,
+            letter="L",
         )
 
 
-class Square(Tetramino):
+class Ohh(Tetramino):
     def __init__(self) -> None:
         super().__init__(
             squares=np.array(
@@ -77,6 +80,7 @@ class Square(Tetramino):
                 ]
             ),
             pivotIndex=0,
+            letter="O",
         )
 
 
@@ -87,6 +91,7 @@ class Tee(Tetramino):
                 [(0, MIDDLE_COL), (1, MIDDLE_COL), (1, MIDDLE_COL + 1), (2, MIDDLE_COL)]
             ),
             pivotIndex=1,
+            letter="T",
         )
 
 
@@ -102,4 +107,5 @@ class Zee(Tetramino):
                 ]
             ),
             pivotIndex=1,
+            letter="Z",
         )
