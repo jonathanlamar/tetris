@@ -11,8 +11,8 @@ class GameState:
     def __init__(self) -> None:
         self.board = np.zeros(BOARD_SIZE)
         self.score = 0
-        self.activePiece = GameState.getRandomPiece()
-        self.nextPiece = GameState.getRandomPiece()
+        self.activePiece = GameState._getRandomPiece()
+        self.nextPiece = GameState._getRandomPiece()
         self.dead = False
 
     def update(self, keyPress: KeyPress) -> None:
@@ -30,7 +30,7 @@ class GameState:
             self._depositPiece(newPiece)
             self._eliminateRows()
             self.activePiece = self.nextPiece
-            self.nextPiece = GameState.getRandomPiece()
+            self.nextPiece = GameState._getRandomPiece()
         else:
             self.activePiece = newPiece
 
@@ -89,5 +89,5 @@ class GameState:
         )
 
     @staticmethod
-    def getRandomPiece() -> Tetramino:
+    def _getRandomPiece() -> Tetramino:
         return np.random.choice([Eye(), Ell(), Ohh(), Zee(), Tee()])
