@@ -1,7 +1,9 @@
 from __future__ import annotations
 from enum import Enum
-from config import BOARD_SIZE
+
 import numpy as np
+
+from config import BOARD_SIZE
 
 MIDDLE_COL = BOARD_SIZE[1] // 2
 
