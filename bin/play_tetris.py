@@ -3,12 +3,13 @@
 from __future__ import annotations
 from time import sleep
 
-from game import GameState
-from pynput.keyboard import Key, Listener
-from utils import KeyPress
+from pynput.keyboard import Key, KeyCode, Listener
+
+from tetris.game import GameState
+from tetris.utils import KeyPress
 
 
-def onPress(key: Key) -> None:
+def onPress(key: Key | KeyCode | None) -> None:
     global KEYPRESS
     if key == Key.up:
         KEYPRESS = KeyPress.UP

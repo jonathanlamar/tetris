@@ -3,8 +3,8 @@ import os
 
 import numpy as np
 
-from config import *
-from utils import *
+from ..config import *
+from ..utils import *
 
 
 class GameState:

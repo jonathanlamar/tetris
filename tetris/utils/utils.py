@@ -3,10 +3,9 @@ from enum import Enum
 
 import numpy as np
 
-from config import BOARD_SIZE
+from ..config import BOARD_SIZE
 
 MIDDLE_COL = BOARD_SIZE[1] // 2
-
 ROTATE_MATRIX = np.array([[0, -1], [1, 0]])
 
 
