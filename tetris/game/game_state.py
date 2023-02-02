@@ -1,5 +1,5 @@
-from copy import deepcopy
 import os
+from copy import deepcopy
 
 import numpy as np
 
@@ -9,7 +9,7 @@ from ..utils import *
 
 class GameState:
     def __init__(self) -> None:
-        self.board = np.zeros(BOARD_SIZE)
+        self.board = np.zeros(BOARD_SIZE, dtype=np.uint8)
         self.score = 0
         self.activePiece = GameState._getRandomPiece()
         self.nextPiece = GameState._getRandomPiece()
@@ -24,6 +24,8 @@ class GameState:
         newPiece.move(keyPress)
 
         if self._checkCollision(newPiece):
+            if keyPress == KeyPress.DOWN:
+                return self.update(KeyPress.NONE)
             newPiece = self.activePiece
 
         if self._checkResting(newPiece):
@@ -55,7 +57,10 @@ class GameState:
         fullRows = (self.board == 1).all(axis=1)
         self.score += fullRows.sum()
         self.board = np.concatenate(
-            (np.zeros((fullRows.sum(), BOARD_SIZE[1])), self.board[~fullRows])
+            (
+                np.zeros((fullRows.sum(), BOARD_SIZE[1]), dtype=np.uint8),
+                self.board[~fullRows],
+            )
         )
 
     def draw(self) -> None:
