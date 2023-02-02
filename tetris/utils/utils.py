@@ -9,12 +9,12 @@ MIDDLE_COL = BOARD_SIZE[1] // 2
 ROTATE_MATRIX = np.array([[0, -1], [1, 0]])
 
 
-class KeyPress(Enum):
-    UP = 1
-    DOWN = 2
-    LEFT = 3
-    RIGHT = 4
-    NONE = 5
+class KeyPress(str, Enum):
+    UP = "UP"
+    DOWN = "DOWN"
+    LEFT = "LEFT"
+    RIGHT = "RIGHT"
+    NONE = "NONE"
 
 
 class Tetramino:
