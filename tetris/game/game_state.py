@@ -1,5 +1,6 @@
 import os
 from copy import deepcopy
+from time import time
 
 import numpy as np
 
@@ -14,8 +15,12 @@ class GameState:
         self.activePiece = GameState._getRandomPiece()
         self.nextPiece = GameState._getRandomPiece()
         self.dead = False
+        self.lastUpdateTime = time()
 
     def update(self, keyPress: KeyPress) -> None:
+        if keyPress == KeyPress.NONE:
+            return
+
         if self._checkCollision(self.activePiece):
             self.dead = True
             return
@@ -24,9 +29,7 @@ class GameState:
         newPiece.move(keyPress)
 
         if self._checkCollision(newPiece):
-            if keyPress == KeyPress.DOWN:
-                return self.update(KeyPress.NONE)
-            newPiece = self.activePiece
+            return
 
         if self._checkResting(newPiece):
             self._depositPiece(newPiece)
@@ -35,6 +38,8 @@ class GameState:
             self.nextPiece = GameState._getRandomPiece()
         else:
             self.activePiece = newPiece
+
+        self.lastUpdateTime = time()
 
     def _checkCollision(self, newPiece: Tetramino) -> bool:
         return (

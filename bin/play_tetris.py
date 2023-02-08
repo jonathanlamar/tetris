@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from __future__ import annotations
-from time import sleep
+from time import sleep, time
 
 from pynput.keyboard import Key, KeyCode, Listener
 
@@ -23,7 +23,7 @@ def onPress(key: Key | KeyCode | None) -> None:
         KEYPRESS = KeyPress.NONE
 
 
-def mainLoop(game):
+def mainLoop(game: GameState):
     global KEYPRESS
     KEYPRESS = KeyPress.NONE
 
@@ -32,6 +32,8 @@ def mainLoop(game):
         KEYPRESS = KeyPress.NONE
         game.draw()
         sleep(0.15)
+        if time() - game.lastUpdateTime > 0.15:
+            game.update(KeyPress.DOWN)
 
 
 if __name__ == "__main__":

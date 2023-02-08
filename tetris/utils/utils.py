@@ -25,13 +25,11 @@ class Tetramino:
 
     def move(self, direction: KeyPress) -> None:
         if direction == KeyPress.DOWN:
-            self.squares[:, 0] += 2
+            self.squares[:, 0] += 1
         elif direction == KeyPress.LEFT:
             self.squares[:, 1] -= 1
         elif direction == KeyPress.RIGHT:
             self.squares[:, 1] += 1
-        elif direction == KeyPress.NONE:
-            self.squares[:, 0] += 1
         elif direction == KeyPress.UP:
             self._rotate()
 
