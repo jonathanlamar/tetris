@@ -23,17 +23,18 @@ def onPress(key: Key | KeyCode | None) -> None:
         KEYPRESS = KeyPress.NONE
 
 
-def mainLoop(game: GameState):
+def mainLoop(game: GameState) -> None:
     global KEYPRESS
     KEYPRESS = KeyPress.NONE
 
     while not game.dead:
         game.update(KEYPRESS)
-        KEYPRESS = KeyPress.NONE
+        if time() - game.lastAdvanceTime > 0.25:
+            KEYPRESS = KeyPress.DOWN
+        else:
+            KEYPRESS = KeyPress.NONE
         game.draw()
-        sleep(0.15)
-        if time() - game.lastUpdateTime > 0.15:
-            game.update(KeyPress.DOWN)
+        sleep(0.05)
 
 
 if __name__ == "__main__":

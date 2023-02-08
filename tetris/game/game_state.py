@@ -9,13 +9,20 @@ from tetris.utils.utils import Ell, Eye, KeyPress, Ohh, Tee, Tetramino, Zee
 
 
 class GameState:
+    board: np.ndarray
+    score: int
+    activePiece: Tetramino
+    nextPiece: Tetramino
+    dead: bool
+    lastAdvanceTime: float
+
     def __init__(self) -> None:
         self.board = np.zeros(BOARD_SIZE, dtype=np.uint8)
         self.score = 0
         self.activePiece = GameState._getRandomPiece()
         self.nextPiece = GameState._getRandomPiece()
         self.dead = False
-        self.lastUpdateTime = time()
+        self.lastAdvanceTime = time()
 
     def update(self, keyPress: KeyPress) -> None:
         if keyPress == KeyPress.NONE:
@@ -39,7 +46,8 @@ class GameState:
         else:
             self.activePiece = newPiece
 
-        self.lastUpdateTime = time()
+        if keyPress == KeyPress.DOWN:
+            self.lastAdvanceTime = time()
 
     def _checkCollision(self, newPiece: Tetramino) -> bool:
         return (
