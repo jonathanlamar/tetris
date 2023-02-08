@@ -29,10 +29,9 @@ def mainLoop(game: GameState) -> None:
 
     while not game.dead:
         game.update(KEYPRESS)
+        KEYPRESS = KeyPress.NONE
         if time() - game.lastAdvanceTime > 0.25:
-            KEYPRESS = KeyPress.DOWN
-        else:
-            KEYPRESS = KeyPress.NONE
+            game.update(KeyPress.DOWN)
         game.draw()
         sleep(0.05)
 
