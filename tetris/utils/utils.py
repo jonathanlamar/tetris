@@ -1,9 +1,10 @@
 from __future__ import annotations
+
 from enum import Enum
 
 import numpy as np
 
-from ..config import BOARD_SIZE
+from tetris.config.config import BOARD_SIZE
 
 MIDDLE_COL = BOARD_SIZE[1] // 2
 ROTATE_MATRIX = np.array([[0, -1], [1, 0]])
@@ -48,9 +49,7 @@ class Tetramino:
 class Eye(Tetramino):
     def __init__(self) -> None:
         super().__init__(
-            squares=np.array(
-                [(0, MIDDLE_COL), (1, MIDDLE_COL), (2, MIDDLE_COL), (3, MIDDLE_COL)]
-            ),
+            squares=np.array([(0, MIDDLE_COL), (1, MIDDLE_COL), (2, MIDDLE_COL), (3, MIDDLE_COL)]),
             pivotIndex=1,
             letter="I",
         )
@@ -59,9 +58,7 @@ class Eye(Tetramino):
 class Ell(Tetramino):
     def __init__(self) -> None:
         super().__init__(
-            squares=np.array(
-                [(0, MIDDLE_COL), (1, MIDDLE_COL), (2, MIDDLE_COL), (2, MIDDLE_COL + 1)]
-            ),
+            squares=np.array([(0, MIDDLE_COL), (1, MIDDLE_COL), (2, MIDDLE_COL), (2, MIDDLE_COL + 1)]),
             pivotIndex=1,
             letter="L",
         )
@@ -86,9 +83,7 @@ class Ohh(Tetramino):
 class Tee(Tetramino):
     def __init__(self) -> None:
         super().__init__(
-            squares=np.array(
-                [(0, MIDDLE_COL), (1, MIDDLE_COL), (1, MIDDLE_COL + 1), (2, MIDDLE_COL)]
-            ),
+            squares=np.array([(0, MIDDLE_COL), (1, MIDDLE_COL), (1, MIDDLE_COL + 1), (2, MIDDLE_COL)]),
             pivotIndex=1,
             letter="T",
         )

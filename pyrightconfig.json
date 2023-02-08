@@ -1,6 +1,10 @@
 {
-  "include": ["src"],
+  "include": ["tetris", "bin"],
+  "exclude": ["stubs"],
+  "stubPath": "stubs/",
   "reportMissingModuleSource": false,
-  "pythonVersion": "3.9",
-  "pythonPlatform": "Linux"
+  "pythonVersion": "3.10",
+  "pythonPlatform": "Linux",
+  "venvPath": "/opt/homebrew/Caskroom/miniforge/base/envs",
+  "venv": "tetris"
 }

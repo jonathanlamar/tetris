@@ -4,8 +4,8 @@ from time import time
 
 import numpy as np
 
-from ..config import *
-from ..utils import *
+from tetris.config.config import BOARD_SIZE
+from tetris.utils.utils import Ell, Eye, KeyPress, Ohh, Tee, Tetramino, Zee
 
 
 class GameState:
@@ -92,11 +92,7 @@ class GameState:
         # Print bottom border
         print("\033[{0};0H+".format(num_rows + 2) + "-" * num_cols + "+")
         # Print other self info
-        print(
-            "\033[{0};1HScore: {1} Next piece: {2}".format(
-                num_rows + 3, self.score, self.nextPiece.letter
-            )
-        )
+        print("\033[{0};1HScore: {1} Next piece: {2}".format(num_rows + 3, self.score, self.nextPiece.letter))
 
     @staticmethod
     def _getRandomPiece() -> Tetramino:
