@@ -25,9 +25,6 @@ class GameState:
         self.lastAdvanceTime = time()
 
     def update(self, keyPress: KeyPress) -> None:
-        if keyPress == KeyPress.NONE:
-            return
-
         if self._checkCollision(self.activePiece):
             self.dead = True
             return
@@ -36,7 +33,7 @@ class GameState:
         newPiece.move(keyPress)
 
         if self._checkCollision(newPiece):
-            return
+            newPiece = self.activePiece
 
         if self._checkResting(newPiece):
             self._depositPiece(newPiece)
