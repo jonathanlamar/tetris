@@ -4,7 +4,7 @@ from time import time
 
 import numpy as np
 
-from tetris.config.config import BOARD_SIZE, BUFFER_SHAPE
+from tetris.config.config import BOARD_SIZE
 from tetris.utils.utils import Ell, Eye, KeyPress, Ohh, Tee, Tetramino, Zee
 
 
@@ -18,7 +18,6 @@ class GameState:
     lastAdvanceTime: float
 
     def __init__(self) -> None:
-        self.boardBuffer = np.zeros(BUFFER_SHAPE, dtype=np.uint8)
         self.board = np.zeros(BOARD_SIZE, dtype=np.uint8)
         self.score = 0
         self.activePiece = GameState._getRandomPiece()
@@ -27,32 +26,24 @@ class GameState:
         self.lastAdvanceTime = time()
 
     def update(self, keyPress: KeyPress) -> None:
-        noOp = True
         if self._checkCollision(self.activePiece):
             self.dead = True
-            noOp = False
             return
 
         newPiece = deepcopy(self.activePiece)
         newPiece.move(keyPress)
 
         if self._checkCollision(newPiece):
-            noOp = False
             newPiece = self.activePiece
 
         if self._checkResting(newPiece):
-            noOp = False
             self._depositPiece(newPiece)
             self._eliminateRows()
             self.activePiece = self.nextPiece
             self.nextPiece = GameState._getRandomPiece()
         else:
-            if keyPress != KeyPress.NONE:
-                noOp = False
             self.activePiece = newPiece
 
-        if not noOp:
-            self._updateBuffer()
         if keyPress == KeyPress.DOWN:
             self.lastAdvanceTime = time()
 
@@ -82,16 +73,6 @@ class GameState:
                 self.board[~fullRows],
             )
         )
-
-    def _updateBuffer(self) -> None:
-        board = np.concatenate(
-            [deepcopy(self.board).reshape((1,) + BOARD_SIZE), np.zeros((1, BOARD_SIZE[0], 1), dtype=np.uint8)], axis=2
-        )
-        for idx in self.activePiece.squares:
-            board[0, idx[0], idx[1]] = 2
-        board[0, 0, -1] = ["I", "L", "O", "T", "Z"].index(self.nextPiece.letter)
-        board[0, 1, -1] = int(self.dead)
-        self.boardBuffer = np.concatenate([board, self.boardBuffer[:-1, :, :]])
 
     def draw(self) -> None:
         os.system("clear")
