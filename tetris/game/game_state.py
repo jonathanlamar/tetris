@@ -27,26 +27,32 @@ class GameState:
         self.lastAdvanceTime = time()
 
     def update(self, keyPress: KeyPress) -> None:
+        noOp = True
         if self._checkCollision(self.activePiece):
             self.dead = True
+            noOp = False
             return
 
         newPiece = deepcopy(self.activePiece)
         newPiece.move(keyPress)
 
         if self._checkCollision(newPiece):
+            noOp = False
             newPiece = self.activePiece
 
         if self._checkResting(newPiece):
+            noOp = False
             self._depositPiece(newPiece)
             self._eliminateRows()
             self.activePiece = self.nextPiece
             self.nextPiece = GameState._getRandomPiece()
         else:
+            if keyPress != KeyPress.NONE:
+                noOp = False
             self.activePiece = newPiece
 
-        self._updateBuffer()
-
+        if not noOp:
+            self._updateBuffer()
         if keyPress == KeyPress.DOWN:
             self.lastAdvanceTime = time()
 
