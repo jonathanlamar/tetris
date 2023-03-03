@@ -4,11 +4,12 @@ from time import time
 
 import numpy as np
 
-from tetris.config.config import BOARD_SIZE
+from tetris.config.config import BOARD_SIZE, BUFFER_SHAPE
 from tetris.utils.utils import Ell, Eye, KeyPress, Ohh, Tee, Tetramino, Zee
 
 
 class GameState:
+    boardBuffer: np.ndarray
     board: np.ndarray
     score: int
     activePiece: Tetramino
@@ -17,6 +18,7 @@ class GameState:
     lastAdvanceTime: float
 
     def __init__(self) -> None:
+        self.boardBuffer = np.zeros(BUFFER_SHAPE, dtype=np.uint8)
         self.board = np.zeros(BOARD_SIZE, dtype=np.uint8)
         self.score = 0
         self.activePiece = GameState._getRandomPiece()
@@ -42,6 +44,8 @@ class GameState:
             self.nextPiece = GameState._getRandomPiece()
         else:
             self.activePiece = newPiece
+
+        self._updateBuffer()
 
         if keyPress == KeyPress.DOWN:
             self.lastAdvanceTime = time()
@@ -72,6 +76,16 @@ class GameState:
                 self.board[~fullRows],
             )
         )
+
+    def _updateBuffer(self) -> None:
+        board = np.concatenate(
+            [deepcopy(self.board).reshape((1,) + BOARD_SIZE), np.zeros((1, BOARD_SIZE[0], 1))], axis=2
+        )
+        for idx in self.activePiece.squares:
+            board[0, idx[0], idx[1]] = 2
+        board[0, 0, -1] = ["I", "L", "O", "T", "Z"].index(self.nextPiece.letter)
+        board[0, 1, -1] = int(self.dead)
+        self.boardBuffer = np.concatenate([board, self.boardBuffer[:-1, :, :]])
 
     def draw(self) -> None:
         os.system("clear")
