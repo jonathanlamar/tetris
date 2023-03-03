@@ -85,7 +85,7 @@ class GameState:
 
     def _updateBuffer(self) -> None:
         board = np.concatenate(
-            [deepcopy(self.board).reshape((1,) + BOARD_SIZE), np.zeros((1, BOARD_SIZE[0], 1))], axis=2
+            [deepcopy(self.board).reshape((1,) + BOARD_SIZE), np.zeros((1, BOARD_SIZE[0], 1), dtype=np.uint8)], axis=2
         )
         for idx in self.activePiece.squares:
             board[0, idx[0], idx[1]] = 2
